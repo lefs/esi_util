@@ -19,13 +19,13 @@
 
 Below is a list of available commands:
 
-- [Latest ESI Rankings](latest-esi-rankings)
-- [Industrial Confidence Chart](industrial-confidence-chart)
-- [Services Confidence Chart](services-confidence-chart)
-- [Consumer Confidence Chart](Consumer-confidence-chart)
-- [Retail Trade Confidence Chart](Retail-trade-confidence-chart)
-- [Construction Confidence Chart](construction-confidence-chart)
-- [ESI Chart](esi-chart)
+- [Latest ESI Rankings](#latest-esi-rankings)
+- [Industrial Confidence Chart](#industrial-confidence-chart)
+- [Services Confidence Chart](#services-confidence-chart)
+- [Consumer Confidence Chart](#consumer-confidence-chart)
+- [Retail Trade Confidence Chart](#retail-trade-confidence-chart)
+- [Construction Confidence Chart](#construction-confidence-chart)
+- [ESI Chart](#esi-chart)
 
 Please note that all commands accept the following optional arguments:
 
