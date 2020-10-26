@@ -1,8 +1,6 @@
 # European Economic Sentiment Indicator (ESI) Utility
 
-## About
-
-`esi_util.py` is a Python script that displays a ranking of countries as well as the EU and the Euro Area (EA), based on the latest [ESI (Economic Sentiment Indicator)](https://ec.europa.eu/eurostat/statistics-explained/index.php/Glossary:Economic_sentiment_indicator_(ESI)) data. It also renders a series of interactive SVG charts based on historical ESI data.
+`esi_util.py` is a Python script that displays a ranking of countries (as well as the EU and the Euro Area) based on the latest [ESI (Economic Sentiment Indicator)](https://ec.europa.eu/eurostat/statistics-explained/index.php/Glossary:Economic_sentiment_indicator_(ESI)) data. It also renders a series of interactive SVG charts based on historical ESI data.
 
 ![ESI rankings screenshot](media/rankings.png)
 ![ESI chart screenshot](media/esi_chart.png)
@@ -55,7 +53,7 @@ To cover a longer period of time use the `--months` parameter. For example, pass
 
 #### Services Confidence Chart
 
-Render an SVG chart with the ESI Services Confidence data for the past 12 months. Use the `--months` parameter for a wider window of time.
+Render an SVG chart with the ESI Services Confidence data for the past 12 months. Use the `--months` parameter for a longer period of time.
 
 ```bash
 $ python3 esi_util.py services_chart --filename=services_esi.svg
@@ -63,7 +61,7 @@ $ python3 esi_util.py services_chart --filename=services_esi.svg
 
 #### Consumer Confidence Chart
 
-Render an SVG chart with the ESI Consumer Confidence data for the past 12 months. Use the `--months` parameter for a wider window of time.
+Render an SVG chart with the ESI Consumer Confidence data for the past 12 months. Use the `--months` parameter for a longer period of time.
 
 ```bash
 $ python3 esi_util.py consumer_chart --filename=consumer_esi.svg
@@ -71,7 +69,7 @@ $ python3 esi_util.py consumer_chart --filename=consumer_esi.svg
 
 #### Retail Trade Confidence Chart
 
-Render an SVG chart with the ESI Retail Trade Confidence data for the past 12 months. Use the `--months` parameter for a wider window of time.
+Render an SVG chart with the ESI Retail Trade Confidence data for the past 12 months. Use the `--months` parameter for a longer period of time.
 
 ```bash
 $ python3 esi_util.py retail_trade_chart --filename=retail_trade_esi.svg
@@ -79,7 +77,7 @@ $ python3 esi_util.py retail_trade_chart --filename=retail_trade_esi.svg
 
 #### Construction Confidence Chart
 
-Render an SVG chart with the ESI Retail Trade Confidence data for the past 12 months. Use the `--months` parameter for a wider window of time.
+Render an SVG chart with the ESI Retail Trade Confidence data for the past 12 months. Use the `--months` parameter for a longer period of time.
 
 ```bash
 $ python3 esi_util.py construction_chart --filename=construction_esi.svg
@@ -87,7 +85,7 @@ $ python3 esi_util.py construction_chart --filename=construction_esi.svg
 
 #### ESI Rankings Chart
 
-Render an SVG chart for the overall ESI for the past 12 months. Use the `--months` parameter for a wider window of time.
+Render an SVG chart for the overall ESI for the past 12 months. Use the `--months` parameter for a longer period of time.
 
 ```bash
 $ python3 esi_util.py esi_chart --filename=esi.svg 
