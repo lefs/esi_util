@@ -13,6 +13,8 @@
 3. Make sure you have all the script dependencies installed (see [requirements.txt](/requirements.txt)). You can install the dependencies by running `pip install -r requirements.txt`. Consider using a virtual environment such as [venv](https://docs.python.org/3/library/venv.html).
 4. You can always see the available script commands by running: `python esi_util.py --help`.
 
+Python >= 3.6 is supported.
+
 ### Available Commands
 
 Below is a list of available commands:
