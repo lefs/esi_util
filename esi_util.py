@@ -11,9 +11,24 @@ from terminaltables import SingleTable
 
 class ESIDataWrapper:
     """Convenience class for the background work related to the ESI xlsx."""
-
-    ENTITY_CODES = ['eu', 'ea', 'at', 'be', 'dk', 'de', 'el', 'es', 'fr',
-                    'it', 'nl', 'pl', 'pt', 'fi', 'se', 'uk']
+    ENTITY_CODES = [
+        'eu',
+        'ea',
+        'at',
+        'be',
+        'dk',
+        'de',
+        'el',
+        'es',
+        'fr',
+        'it',
+        'nl',
+        'pl',
+        'pt',
+        'fi',
+        'se',
+        'uk'
+    ]
     # Two digit country/entity codes (as used in the ESI) mapped to
     # countries/entities.
     ESI_ENTITIES = {
@@ -60,7 +75,7 @@ class ESIDataWrapper:
         '.CONS',  # <Entity Code>.CONS
         '.RETA',  # <Entity Code>.RETA
         '.BUIL',  # <Entity Code>.BUIL
-        '.ESI'    # <Entity Code>.ESI
+        '.ESI'  # <Entity Code>.ESI
     ]
 
     def __init__(self, data_dir=Path('.'),
@@ -78,12 +93,13 @@ class ESIDataWrapper:
         """Creates a CSV file for each country/entity."""
         for code in self.ENTITY_CODES:
             # Each value of the esi_tables dict is a Pandas DataFrame.
-            esi_tables[code].to_csv(self._entity_csv_filename(code),
-                                    encoding='utf-8')
+            esi_tables[code].to_csv(
+                self._entity_csv_filename(code), encoding='utf-8'
+            )
 
     def _import_esi_tables_from_xlsx(self):
         """Imports the ESI numbers for each country/entity we're interested
-           in into DataFrames.
+        in into DataFrames.
         """
         # ESI xlsx file and relevant sheet.
         esi_file_path = Path(self.data_dir) / self.esi_filename
@@ -91,20 +107,22 @@ class ESIDataWrapper:
         esi_tables = {}
 
         for entity, cols in self.ENTITY_COLS.items():
-            esi_tables[entity] = pd.read_excel(esi_file_path,
-                                               sheet_name=self.esi_sheet_name,
-                                               header=0,
-                                               index_col=0,
-                                               usecols=cols)
+            esi_tables[entity] = pd.read_excel(
+                esi_file_path,
+                sheet_name=self.esi_sheet_name,
+                header=0,
+                index_col=0,
+                usecols=cols
+            )
 
         return esi_tables
 
     def _load_esi_tables_from_csv(self):
         esi_tables = {}
         for ec in self.ENTITY_CODES:
-            esi_tables[ec] = pd.read_csv(self._entity_csv_filename(ec),
-                                         index_col=0,
-                                         parse_dates=[0])
+            esi_tables[ec] = pd.read_csv(
+                self._entity_csv_filename(ec), index_col=0, parse_dates=[0]
+            )
 
         return esi_tables
 
@@ -178,7 +196,7 @@ class ESIDataWrapper:
         CONS_idx = 2  # CONS - Consumer confidence indicator (20%)
         RETA_idx = 3  # RETA - Retail trade confidence indicator (5%)
         BUIL_idx = 4  # BUIL - Construction confidence indicator (5%)
-        ESI_idx = 5   # ESI - Economic sentiment indicator, composite.
+        ESI_idx = 5  # ESI - Economic sentiment indicator, composite.
 
         if date is None:
             now = datetime.datetime.now()
@@ -194,9 +212,11 @@ class ESIDataWrapper:
         latest_values = {}
         for ec in self.ESI_ENTITIES.keys():
             try:
-                latest_values[ec] = \
-                    esi_tables[ec][start_date:end_date].\
-                    tail(1).values.tolist()[0]
+                latest_values[ec] = (
+                    esi_tables[ec][start_date:end_date]
+                    .tail(1)
+                    .values.tolist()[0]
+                )
             except IndexError:
                 sys.exit('Date given is out of range')
 
@@ -222,8 +242,9 @@ class ESIDataWrapper:
             'esi': esi_ranking
         }
         for ranking, values in rankings.items():
-            rankings[ranking] = \
-                sorted(values.items(), key=lambda x: x[1], reverse=True)
+            rankings[ranking] = sorted(
+                values.items(), key=lambda x: x[1], reverse=True
+            )
 
         return rankings
 
@@ -288,16 +309,13 @@ class ESIDataWrapper:
             esi_component = '.ESI'
         esi_tables = self._fetch_esi_tables()
 
-        values = {
-            'countries': {},
-            'dates': []
-        }
+        values = {'countries': {}, 'dates': []}
         for ec in self.ENTITY_CODES:
             col = '{}{}'.format(ec.upper(), esi_component)
-            values['countries'][ec] = \
-                esi_tables[ec][col].tail(months).tolist()
-        values['dates'] = \
+            values['countries'][ec] = esi_tables[ec][col].tail(months).tolist()
+        values['dates'] = (
             esi_tables[self.ENTITY_CODES[0]].tail(months).index.tolist()
+        )
 
         return values
 
@@ -349,8 +367,12 @@ def display_latest_rankings(date=None, json_output=False, data_dir=None,
             else:
                 tmpl = '{} ({})'
 
-            row = [tmpl.format(rankings[indicator][i][0],
-                   rankings[indicator][i][1]) for indicator in indicators]
+            row = [
+                tmpl.format(
+                    rankings[indicator][i][0], rankings[indicator][i][1]
+                )
+                for indicator in indicators
+            ]
             table_data.append(row)
 
         rankings_table = SingleTable(table_data)
@@ -362,8 +384,8 @@ def display_latest_rankings(date=None, json_output=False, data_dir=None,
         print(rankings_table.table)
 
 
-def historical_esi_values_chart(esi_component, title, filename=None, months=12,
-                                data_dir=None, esi_filename=None,
+def historical_esi_values_chart(esi_component, title, filename=None,
+                                months=12, data_dir=None, esi_filename=None,
                                 esi_sheet_name=None):
     """Generates an SVG chart with historical values for an ESI component."""
     disable_xml_declaration = True
@@ -379,8 +401,12 @@ def historical_esi_values_chart(esi_component, title, filename=None, months=12,
         esi.esi_sheet_name = esi_sheet_name
     values = esi.get_historical_values(esi_component, months)
 
-    chart = pygal.Line(dots_size=1, show_y_guides=False, x_label_rotation=90,
-                       disable_xml_declaration=disable_xml_declaration)
+    chart = pygal.Line(
+        dots_size=1,
+        show_y_guides=False,
+        x_label_rotation=90,
+        disable_xml_declaration=disable_xml_declaration
+    )
     chart.title = title
     chart.x_labels = map(lambda d: d.strftime('%Y-%m'), values['dates'])
     for country, val in values['countries'].items():
@@ -394,72 +420,100 @@ def historical_esi_values_chart(esi_component, title, filename=None, months=12,
 
 # Convenience functions.
 
+
 def industrial_esi_chart(filename=None, months=12, data_dir=None,
                          esi_filename=None, esi_sheet_name=None):
     """Render an SVG chart with ESI Industrial Confidence data."""
-    return historical_esi_values_chart('.INDU', 'Industrial Confidence',
-                                       filename=filename, months=months,
-                                       data_dir=data_dir,
-                                       esi_filename=esi_filename,
-                                       esi_sheet_name=esi_sheet_name)
+    return historical_esi_values_chart(
+        '.INDU',
+        'Industrial Confidence',
+        filename=filename,
+        months=months,
+        data_dir=data_dir,
+        esi_filename=esi_filename,
+        esi_sheet_name=esi_sheet_name
+    )
 
 
 def services_esi_chart(filename=None, months=12, data_dir=None,
                        esi_filename=None, esi_sheet_name=None):
     """Render an SVG chart with ESI Services Confidence data."""
-    return historical_esi_values_chart('.SERV', 'Services Confidence',
-                                       filename=filename, months=months,
-                                       data_dir=data_dir,
-                                       esi_filename=esi_filename,
-                                       esi_sheet_name=esi_sheet_name)
+    return historical_esi_values_chart(
+        '.SERV',
+        'Services Confidence',
+        filename=filename,
+        months=months,
+        data_dir=data_dir,
+        esi_filename=esi_filename,
+        esi_sheet_name=esi_sheet_name
+    )
 
 
 def consumer_esi_chart(filename=None, months=12, data_dir=None,
                        esi_filename=None, esi_sheet_name=None):
     """Render an SVG chart with ESI Consumer Confidence data."""
-    return historical_esi_values_chart('.CONS', 'Consumer Confidence',
-                                       filename=filename, months=months,
-                                       data_dir=data_dir,
-                                       esi_filename=esi_filename,
-                                       esi_sheet_name=esi_sheet_name)
+    return historical_esi_values_chart(
+        '.CONS',
+        'Consumer Confidence',
+        filename=filename,
+        months=months,
+        data_dir=data_dir,
+        esi_filename=esi_filename,
+        esi_sheet_name=esi_sheet_name
+    )
 
 
 def retail_trade_esi_chart(filename=None, months=12, data_dir=None,
                            esi_filename=None, esi_sheet_name=None):
     """Render an SVG chart with ESI Retail Trade Confidence data."""
-    return historical_esi_values_chart('.RETA', 'Retail Trade Confidence',
-                                       filename=filename, months=months,
-                                       data_dir=data_dir,
-                                       esi_filename=esi_filename,
-                                       esi_sheet_name=esi_sheet_name)
+    return historical_esi_values_chart(
+        '.RETA',
+        'Retail Trade Confidence',
+        filename=filename,
+        months=months,
+        data_dir=data_dir,
+        esi_filename=esi_filename,
+        esi_sheet_name=esi_sheet_name
+    )
 
 
 def construction_esi_chart(filename=None, months=12, data_dir=None,
                            esi_filename=None, esi_sheet_name=None):
     """Render an SVG chart with ESI Construction Confidence data."""
-    return historical_esi_values_chart('.BUIL', 'Construction Confidence',
-                                       filename=filename, months=months,
-                                       data_dir=data_dir,
-                                       esi_filename=esi_filename,
-                                       esi_sheet_name=esi_sheet_name)
+    return historical_esi_values_chart(
+        '.BUIL',
+        'Construction Confidence',
+        filename=filename,
+        months=months,
+        data_dir=data_dir,
+        esi_filename=esi_filename,
+        esi_sheet_name=esi_sheet_name
+    )
 
 
 def esi_chart(filename=None, months=12, data_dir=None, esi_filename=None,
               esi_sheet_name=None):
     """Render an SVG chart with ESI data."""
-    return historical_esi_values_chart('.ESI', 'ESI', filename=filename,
-                                       months=months, data_dir=data_dir,
-                                       esi_filename=esi_filename,
-                                       esi_sheet_name=esi_sheet_name)
+    return historical_esi_values_chart(
+        '.ESI',
+        'ESI',
+        filename=filename,
+        months=months,
+        data_dir=data_dir,
+        esi_filename=esi_filename,
+        esi_sheet_name=esi_sheet_name
+    )
 
 
 if __name__ == '__main__':
-    fire.Fire({
-        'latest_rankings': display_latest_rankings,
-        'industrial_chart': industrial_esi_chart,
-        'services_chart': services_esi_chart,
-        'consumer_chart': consumer_esi_chart,
-        'retail_trade_chart': retail_trade_esi_chart,
-        'construction_chart': construction_esi_chart,
-        'esi_chart':  esi_chart
-    })
+    fire.Fire(
+        {
+            'latest_rankings': display_latest_rankings,
+            'industrial_chart': industrial_esi_chart,
+            'services_chart': services_esi_chart,
+            'consumer_chart': consumer_esi_chart,
+            'retail_trade_chart': retail_trade_esi_chart,
+            'construction_chart': construction_esi_chart,
+            'esi_chart': esi_chart
+        }
+    )
